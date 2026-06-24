@@ -18,17 +18,29 @@ T roundTrip<T>(
 
 void main() {
   group('GeoResource JSON', () {
-    test('uses lowercase GeoResource values in JSON', () {
-      final encoded = jsonEncode({'key': GeoResource.GEOIP});
-
-      expect(encoded, '{"key":"geoip"}');
+    test('exposes lowercase GeoResource values', () {
+      expect(GeoResource.MMDB.value, 'mmdb');
+      expect(GeoResource.ASN.value, 'asn');
+      expect(GeoResource.GEOIP.value, 'geoip');
+      expect(GeoResource.GEOSITE.value, 'geosite');
     });
 
-    test('parses lowercase GeoResource values from JSON', () {
-      expect(GeoResource.fromJson('mmdb'), GeoResource.MMDB);
-      expect(GeoResource.fromJson('asn'), GeoResource.ASN);
-      expect(GeoResource.fromJson('geoip'), GeoResource.GEOIP);
-      expect(GeoResource.fromJson('geosite'), GeoResource.GEOSITE);
+    test('parses lowercase GeoResource keys from config JSON', () {
+      final config = PatchClashConfig.fromJson({
+        'geox-url': {
+          'mmdb': 'https://example.com/mmdb',
+          'asn': 'https://example.com/asn.mmdb',
+          'geoip': 'https://example.com/geoip.dat',
+          'geosite': 'https://example.com/geosite.dat',
+        },
+      });
+
+      expect(config.geoXUrl, {
+        GeoResource.MMDB: 'https://example.com/mmdb',
+        GeoResource.ASN: 'https://example.com/asn.mmdb',
+        GeoResource.GEOIP: 'https://example.com/geoip.dat',
+        GeoResource.GEOSITE: 'https://example.com/geosite.dat',
+      });
     });
 
     test('GeoXUrl defaults use GeoResource keys', () {
@@ -43,15 +55,24 @@ void main() {
       expect(json['geox-url'], {'geoip': 'https://example.com/geoip.dat'});
     });
 
+    test('converts geoXUrl map to raw config map', () {
+      const geoXUrl = {
+        GeoResource.MMDB: 'https://example.com/mmdb',
+        GeoResource.GEOSITE: 'https://example.com/geosite.dat',
+      };
+
+      expect(geoXUrl.raw, {
+        'mmdb': 'https://example.com/mmdb',
+        'geosite': 'https://example.com/geosite.dat',
+      });
+    });
+
     test('PatchClashConfig parses geoXUrl map with GeoResource keys', () {
       final config = PatchClashConfig.fromJson({
         'geox-url': {'mmdb': 'https://example.com/mmdb'},
       });
 
-      expect(config.geoXUrl, {
-        ...defaultGeoXUrl,
-        GeoResource.MMDB: 'https://example.com/mmdb',
-      });
+      expect(config.geoXUrl, {GeoResource.MMDB: 'https://example.com/mmdb'});
     });
   });
 
