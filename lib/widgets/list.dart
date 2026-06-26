@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:collection/collection.dart';
 import 'package:fl_clash/common/common.dart';
 import 'package:fl_clash/enum/enum.dart';
@@ -9,7 +10,6 @@ import 'package:flutter/material.dart';
 
 import 'card.dart';
 import 'input.dart';
-import 'open_container.dart';
 import 'scaffold.dart';
 import 'sheet.dart';
 
@@ -301,10 +301,16 @@ class ListItem<T> extends StatelessWidget {
       final child = openDelegate.widget;
       final onChanged = openDelegate.onChanged;
       return OpenContainer<T>(
-        // closedColor: context.colorScheme.surface,
-        // openColor: context.colorScheme.surface,
-        // closedElevation: 0,
-        // openElevation: 0,
+        closedColor: context.colorScheme.surface,
+        openColor: context.colorScheme.surface,
+        closedElevation: 0,
+        openElevation: 0,
+        openShape: const RoundedSuperellipseBorder(
+          borderRadius: BorderRadius.zero,
+        ),
+        closedShape: const RoundedSuperellipseBorder(
+          borderRadius: BorderRadius.zero,
+        ),
         closedBuilder: (context, action) {
           Future<void> openAction() async {
             final isMobile = globalState.container.read(isMobileViewProvider);

@@ -252,7 +252,10 @@ class _AdaptiveSheetScaffoldState extends State<AdaptiveSheetScaffold> {
               ),
             ),
           ),
-          Padding(padding: const EdgeInsets.symmetric(horizontal: 4), child: appBar),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: appBar,
+          ),
           const SizedBox(height: 6),
         ],
       );
@@ -290,10 +293,7 @@ class _AdaptiveSheetScaffoldState extends State<AdaptiveSheetScaffold> {
                               top: Radius.circular(28),
                             ),
                             child: BackdropFilter(
-                              filter: ImageFilter.blur(
-                                sigmaX: 12.0,
-                                sigmaY: 12.0,
-                              ),
+                              filter: commonFilter,
                               child: ColoredBox(
                                 color: isScrolled
                                     ? backgroundColor.opacity60
